@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+shopt -s nocasematch
+
+INI_FILE=~/.aws/credentials
+PROFILE=${1:-default}
+ACTION=${ACTION:=dump-permissions}
+
+echo "Using profile: $PROFILE to $ACTION"
+
+while IFS=' = ' read key value
+do
+    if [[ $key == \[*] ]]; then
+        section=$key
+    elif [[ $value ]] && [[ $section == "[${PROFILE}]" ]]; then
+        if [[ $key == 'aws_access_key_id' ]]; then
+            AWS_ACCESS_KEY_ID=$value
+        elif [[ $key == 'aws_secret_access_key' ]]; then
+            AWS_SECRET_ACCESS_KEY=$value
+        elif [[ $key == 'aws_session_token' ]]; then
+            AWS_SESSION_TOKEN=$value
+        fi
+    fi
+done < $INI_FILE
+
+if [[ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY" ]] ; then
+    echo "Couldn't get complete creds for profile '$PROFILE' in file '$INI_FILE'"
+    echo
+    exit 1
+fi
+
+cmd="docker run --rm -ti rdkls/nimbostratus:latest $ACTION --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY"
+echo $cmd
+$cmd
