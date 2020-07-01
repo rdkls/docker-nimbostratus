@@ -32,6 +32,6 @@ if [[ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY" ]] ; then
     exit 1
 fi
 
-cmd="docker run --rm -ti rdkls/nimbostratus:latest $ACTION --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY $TOKEN_OPTION"
+cmd="docker run --rm -ti rdkls/nimbostratus:latest -v $ACTION --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY $TOKEN_OPTION"
 echo $cmd
 $cmd
