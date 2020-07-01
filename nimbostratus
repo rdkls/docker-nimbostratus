@@ -22,12 +22,16 @@ do
     fi
 done < $INI_FILE
 
+if [[ -n "$AWS_SESSION_TOKEN" ]]; then
+	TOKEN_OPTION="--token $AWS_SESSION_TOKEN"
+fi
+
 if [[ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY" ]] ; then
     echo "Couldn't get complete creds for profile '$PROFILE' in file '$INI_FILE'"
     echo
     exit 1
 fi
 
-cmd="docker run --rm -ti rdkls/nimbostratus:latest $ACTION --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY"
+cmd="docker run --rm -ti rdkls/nimbostratus:latest $ACTION --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY $TOKEN_OPTION"
 echo $cmd
 $cmd
