@@ -19,9 +19,16 @@ IAM permissions can be determined if:
     - RDS
     - SQS
 
-`nimbostratus` is a convenience script to dump permissions using local creds from `~/.aws/credentials`, in verbose mode. The only argument is the AWS profile from which to take cred, default is "default".
+## Usage
 
-```bash
+From docker hub with no install:
+```ruby
+docker run --rm -ti rdkls/nimbostratus:latest -v dump-permissions --access-key AKIAJFQ6E7BY57Q3OBGA --secret-key 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
+```
+
+If you use a lot, `nimbostratus` is a convenience script to dump permissions using local creds from `~/.aws/credentials`, in verbose mode. The only argument is the AWS profile from which to take cred, default is "default".
+
+```ruby
 ~/w/3/f/f/docker-nimbostratus> ./nimbostratus flaws6
 
 Using profile: flaws6 to dump-permissions
